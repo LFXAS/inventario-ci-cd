@@ -8,6 +8,7 @@ on:
 
 jobs:
   deploy:
+    # Solo ejecuta si CI pasó correctamente
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
@@ -20,20 +21,43 @@ jobs:
         with:
           node-version: 'lts/*'
 
-      - name: Construir proyecto (simulado)
-        run: |
-          echo "Iniciando proceso de build..."
-          npm install
-          echo "Compilación realizada (simulada)."
+      # ==========================
+      # INSTALAR BACKEND
+      # ==========================
+      - name: Instalar dependencias del Backend
+        working-directory: ./backend
+        run: npm install
 
-      - name: Preparar artefactos
+      - name: Build Backend (simulado)
+        working-directory: ./backend
         run: |
-          echo "Empaquetando proyecto..."
-          mkdir dist
+          echo "Simulando build del backend..."
+          mkdir -p build
+          cp -r src build/src
+          echo "Backend listo (simulado)."
+
+      # ==========================
+      # INSTALAR FRONTEND
+      # ==========================
+      - name: Instalar dependencias del Frontend
+        working-directory: ./frontend
+        run: npm install
+
+      - name: Build Frontend (simulado)
+        working-directory: ./frontend
+        run: |
+          echo "Simulando build del frontend..."
+          mkdir -p dist
           cp -r src dist/src
-          echo "Artefactos listos."
+          echo "Frontend listo (simulado)."
 
+      # ==========================
+      # DESPLIEGUE SIMULADO
+      # ==========================
       - name: Simular despliegue
         run: |
-          echo "Desplegando en entorno ficticio..."
-          echo "Despliegue completado (simulado)."
+          echo "====================================="
+          echo " DESPLIEGUE SIMULADO COMPLETADO"
+          echo " Backend → ficticio"
+          echo " Frontend → ficticio"
+          echo "====================================="
