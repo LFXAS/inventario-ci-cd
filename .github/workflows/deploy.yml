@@ -1,0 +1,39 @@
+name: Deploy (Simulado)
+
+on:
+  workflow_run:
+    workflows: ["CI Inventario"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Node LTS
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Construir proyecto (simulado)
+        run: |
+          echo "Iniciando proceso de build..."
+          npm install
+          echo "Compilación realizada (simulada)."
+
+      - name: Preparar artefactos
+        run: |
+          echo "Empaquetando proyecto..."
+          mkdir dist
+          cp -r src dist/src
+          echo "Artefactos listos."
+
+      - name: Simular despliegue
+        run: |
+          echo "Desplegando en entorno ficticio..."
+          echo "Despliegue completado (simulado)."
